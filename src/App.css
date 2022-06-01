@@ -1,0 +1,42 @@
+body {
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  margin: 0;
+  background-color: lightblue;
+}
+
+h1 {
+  text-align: center;
+  margin-top: 4rem;
+}
+
+th, td {
+  border: 1px solid black;
+}
+
+.version-table {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.poke-list-item {
+  margin-left: 0.5rem;
+  transition: all .3s ease;
+}
+
+.inactive {
+  background-color: gray;
+}
+
+.poke-list-table{
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 2rem;
+  border: 2px solid black;
+  border-collapse: collapse;
+  background-color: white;
+}
+
+.poke-list-item:hover {
+  transform: scale(1.05);
+  cursor: pointer;
+}
