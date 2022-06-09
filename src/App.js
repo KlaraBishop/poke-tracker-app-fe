@@ -1,86 +1,44 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import './App.css';
+import pokedex from './pokedex' 
 
-const PokeListItem = (props) => {
-  const versionItems = props.data.versions.map((version) => 
-    <div className='poke-list-item'>{version.substring(0,3)}</div>
-  );
+const PokeCard = (props) => {
+  const [isActive, setIsActive] = useState(true)
 
-  const [catchStatusClass, setCatchStatusClass] = useState(() => {
-    if (props.data.caught) return 'inactive'
-    return 'active'
-  })
-
-  const [catchCheck, setCatchCheck] = useState(props.data.caught);
-
-  const handleCatchClick = () => {
-    if (catchStatusClass === 'active') {
-      setCatchStatusClass('inactive');
-      setCatchCheck(1);
-    }
-    else {
-      setCatchStatusClass('active');
-      setCatchCheck(0);
-    }
-
-    props.handleCatchClick(props.data.id)
+  const handleClick = () => {
+    setIsActive(current => !current)
   }
 
-  return <tr onClick={handleCatchClick} className={`poke-list-item ${catchStatusClass}`}>
-    <td>{props.data.id}</td>
-    <td>{props.data.name}</td>
-    <td>{props.data.types[0]}</td>
-    <td>{props.data.types[1]}</td>
-    <td className='version-table'>
-      {versionItems}
-    </td>
-    <td><input type='checkbox' checked={catchCheck} /></td>
-  </tr>
+  const {id, name} = props.pokemon
+  const icon = `data/icons/${id.substring(1)}.png`
+  console.log(icon)
+
+  return <div className='card' onClick={handleClick} style={{ backgroundColor: isActive ? 'white' : 'lightgrey' }}>
+    <img src={icon} alt='pokemon icon'/>
+    <p>
+      <div className='id-number'>
+        {id} -
+      </div>
+      {name}
+    </p>
+  </div>
 }
 
-function App() {
-  const [pokeList, setPokeList] = useState();
+const Header = (props) => {
+  return <div className='header'>
+    Catch Tracker
+  </div>
+}
 
-  useEffect(() => {
-    fetch('http://localhost:8008/pokemon/')
-    .then(response => response.json())
-    .then(data => setPokeList(data.map(pokemon => <PokeListItem data={pokemon} handleCatchClick={handleCatchClick}/>
-    )));
-  }, []);
+const App = () => {
+  const [pokemon, setPokemon] = useState(pokedex)
 
-  const handleCatchClick = (id) => {    
-    fetch(`http://localhost:8008/catch/${id}`)
-    .then(data => {
-      let updatedPokeList = pokeList.map( (poke) => {
-        if (poke.id === id) return <PokeListItem data={data} handleCatchClick={handleCatchClick}/>
-        else return poke;
-      })
-
-      setPokeList(updatedPokeList);
-    });
-  }
-
-  return (
-
-    <div className="wrapper">
-      <h1>Catch Tracker</h1>
-
-      <table className='poke-list-table'>
-        <thead>
-          <th>Id</th>
-          <th>Name</th>
-          <th>Type 1</th>
-          <th>Type 2</th>
-          <th>Versions</th>
-          <th>Caught?</th>
-        </thead>
-
-        {pokeList}
-      </table>
-
-      
+  return <div> 
+    <Header />
+    <div className='card-wrapper'>
+      {pokemon.map( pokemon => <PokeCard pokemon={pokemon} />)}
     </div>
-  );
+  </div>
 }
 
 export default App;
